@@ -4,6 +4,12 @@ spring:
     username: root
     password:
 
+  data:
+    mongodb:
+      database: drumre
+      port: 27017
+      host: localhost
+
   liquibase:
     change-log: classpath:/db/changelog/changelog-master.xml
 
