@@ -18,7 +18,7 @@ public class MovieController {
     MovieService movieService;
 
     @GetMapping("/all")
-    public List<Movie> getAllMovies(@RequestParam int size){
+    public List<Movie> getAllMovies(@RequestParam(required = false) int size){
         return movieService.GetAll().subList(0,size);
     }
 }

@@ -1,7 +1,9 @@
 package drumre.projekt.tvapp.data;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -18,7 +20,8 @@ public class Movie {
     @JsonAlias("backdrop_path")
     public String backdropPath;
     @JsonAlias("genre_ids")
-    public List<Long> genreIds;
+    public List<String> genreIds;
+    public List<String> genres;
     @JsonAlias("original_language")
     public String originalLanguage;
     @JsonAlias("original_title")
@@ -35,4 +38,24 @@ public class Movie {
     @JsonAlias("poster_path")
     public String posterPath;
     public Boolean video;
+    private Long budget;
+    private String homepage;
+    @JsonAlias("imdb_id")
+    private String imdbId;
+    @JsonAlias("production_companies")
+    private List<ProductionCompanies> productionCompanies;
+    private Long runtime;
+    private String status;
+    private String tagline;
+
+
+    public void MapFromMovieDetails(MovieDetails details){
+        this.budget = details.getBudget();
+        this.homepage = details.getHomepage();
+        this.imdbId = details.getImdbId();
+        this.productionCompanies = details.getProductionCompanies();
+        this.runtime = details.getRuntime();
+        this.status = details.getStatus();
+        this.tagline = details.getTagline();
+    }
 }
