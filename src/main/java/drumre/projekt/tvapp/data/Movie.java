@@ -2,6 +2,7 @@ package drumre.projekt.tvapp.data;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -12,6 +13,8 @@ import java.util.List;
 
 @Document(collection = "movies")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Movie {
 
     @Id
@@ -47,6 +50,9 @@ public class Movie {
     private Long runtime;
     private String status;
     private String tagline;
+
+    private OMDBRating rating;
+
 
 
     public void MapFromMovieDetails(MovieDetails details){

@@ -8,5 +8,6 @@
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <include file="changelogs/changelog-user.xml" relativeToChangelogFile="true"/>
+    <include file="changelogs/changelog-nullable-ids.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

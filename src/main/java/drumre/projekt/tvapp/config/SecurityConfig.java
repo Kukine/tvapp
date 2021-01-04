@@ -101,6 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/",
                         "/remote/**",
+                        "/movie/top",
                         "/test",
                         "/error",
                         "/favicon.ico",

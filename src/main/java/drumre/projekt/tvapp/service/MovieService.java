@@ -1,13 +1,15 @@
 package drumre.projekt.tvapp.service;
 
+import drumre.projekt.tvapp.controller.dto.BasicMovieDTO;
+import drumre.projekt.tvapp.controller.dto.MovieWithDetailsDTO;
 import drumre.projekt.tvapp.data.Movie;
 
 import java.util.List;
 
 public interface MovieService {
 
-    Movie GetByID(String id);
+    MovieWithDetailsDTO GetByID(String id);
 
-    List<Movie> GetAll();
+    List<BasicMovieDTO> GetBatch(int size);
 
 }

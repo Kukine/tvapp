@@ -1,0 +1,10 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="kukine" id="changelog-1.1">
+        <dropNotNullConstraint tableName="users" columnName="auth_provider_id" columnDataType="VARCHAR(128)"/>
+        <dropNotNullConstraint tableName="users" columnName="image_url" columnDataType="VARCHAR(512)"/>
+    </changeSet>
+</databaseChangeLog>
