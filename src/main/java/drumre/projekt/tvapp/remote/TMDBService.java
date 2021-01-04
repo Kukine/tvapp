@@ -35,6 +35,9 @@ public class TMDBService {
     private MovieRepository movieRepository;
 
     @Autowired
+    private OMDBService omdbService;
+
+    @Autowired
     private GenreRepository genreRepository;
 
     public List<Movie> getMoviesFromTMDB() throws JsonProcessingException, InterruptedException {
@@ -72,6 +75,7 @@ public class TMDBService {
                 }
                 m.setGenres(g);
                 m.MapFromMovieDetails(getDetails(m.id));
+
             }
             movieRepository.saveAll(pagelist.results);
             pagelist.results.forEach(x -> logger.info(String.format("Saving movie with Title: %s, with genres: %s", x.title,x.genres.toString())));

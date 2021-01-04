@@ -20,7 +20,7 @@ public class BasicMovieDTO {
     public String title;
     public Date releaseDate;
     public Long voteCount;
-    public OMDBRating rating;
+    public String posterPath;
     public Double popularity;
     public Double voteAverage;
 

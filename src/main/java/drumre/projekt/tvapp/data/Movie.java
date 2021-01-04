@@ -6,8 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.Date;
 import java.util.List;
 
@@ -51,9 +55,11 @@ public class Movie {
     private String status;
     private String tagline;
 
-    private OMDBRating rating;
-
-
+    // Data we fetch from OMDB API
+    private List<String> actors;
+    private String director;
+    private List<Rating> ratings;
+    private String rated;
 
     public void MapFromMovieDetails(MovieDetails details){
         this.budget = details.getBudget();

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -35,14 +36,29 @@ public class OMDBService {
             if(m.getImdbId() == null || m.getImdbId().equals("")){
                 continue;
             }
+            if(m.getRated() != null){
+                continue;
+            }
             String url = base + apiKey + "&i=" + m.getImdbId();
             logger.info("Fetching ratings for movie from URL: " + url);
             ResponseEntity<String> response = restTemplate.getForEntity(url , String.class);
             OMDBRating rating = new ObjectMapper().readValue(response.getBody(), OMDBRating.class);
-            rating.setMovieID(m.getId());
-            OMDBRating r = ratingRepository.save(rating);
+            m.setActors(Arrays.asList(rating.getActors().split(",").clone()));
+            m.setDirector(rating.getDirector());
+            m.setRatings(rating.getRatings());
+            m.setRated(rating.getRated());
+            this.movieRepository.save(m);
         }
         logger.info("Finished fetching reviews for all movies");
+    }
+
+    public OMDBRating getRating(String imdbID) throws  JsonProcessingException {
+        String url = base + apiKey + "&i=" + imdbID;
+        RestTemplate restTemplate = new RestTemplate();
+        logger.info("Fetching ratings for movie from URL: " + url);
+        ResponseEntity<String> response = restTemplate.getForEntity(url , String.class);
+        OMDBRating rating = new ObjectMapper().readValue(response.getBody(), OMDBRating.class);
+        return rating;
     }
 
 }

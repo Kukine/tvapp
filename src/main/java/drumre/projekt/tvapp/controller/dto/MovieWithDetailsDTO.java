@@ -8,11 +8,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class MovieWithDetailsDTO{
     public Movie movie;
-    public OMDBRating rating;
-
 
     public MovieWithDetailsDTO(Movie movie){
         this.movie = movie;

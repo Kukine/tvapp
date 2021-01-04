@@ -8,8 +8,12 @@ import java.util.List;
 
 public interface MovieService {
 
-    MovieWithDetailsDTO GetByID(String id);
+    Movie GetByID(String id);
 
     List<BasicMovieDTO> GetBatch(int size);
+
+    void likeMovie(Long userID, String movieID);
+
+    List<Movie> findSimiliarMovies(String movieID);
 
 }

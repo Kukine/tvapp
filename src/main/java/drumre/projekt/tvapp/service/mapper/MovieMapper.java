@@ -30,14 +30,7 @@ public class MovieMapper {
         dto.setReleaseDate(movie.getReleaseDate());
         dto.setPopularity(movie.getPopularity());
         dto.setVoteAverage(movie.getVoteAverage());
-
-        OMDBRating exampleRating = new OMDBRating();
-        exampleRating.setMovieID(movie.getId());
-        Example<OMDBRating> example = Example.of(exampleRating);
-        List<OMDBRating> rating = ratingRepository.findAll(example);
-        if (rating.size() == 1){
-            dto.setRating(rating.get(0));
-        }
+        dto.setPosterPath(movie.getPosterPath());
         return dto;
     }
 
@@ -48,15 +41,7 @@ public class MovieMapper {
     }
 
     public MovieWithDetailsDTO movieWithDetailsDTO(Movie movie){
-        MovieWithDetailsDTO movieWithDetailsDTO = new MovieWithDetailsDTO(movie);
-        OMDBRating exampleRating = new OMDBRating();
-        exampleRating.setMovieID(movie.getId());
-        Example<OMDBRating> example = Example.of(exampleRating);
-        List<OMDBRating> rating = ratingRepository.findAll(example);
-        if (rating.size() == 1){
-            movieWithDetailsDTO.setRating(rating.get(0));
-        }
-        return movieWithDetailsDTO;
+        return new MovieWithDetailsDTO(movie);
     }
 
 }
