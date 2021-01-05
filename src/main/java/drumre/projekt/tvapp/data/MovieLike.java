@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.sql.Timestamp;
+
 @Data
 @Document("likes")
 @AllArgsConstructor
@@ -12,4 +14,5 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class MovieLike {
     public Long userID;
     public String movieID;
+    public Timestamp likeTime;
 }

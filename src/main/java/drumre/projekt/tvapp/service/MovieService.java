@@ -14,6 +14,5 @@ public interface MovieService {
 
     void likeMovie(Long userID, String movieID);
 
-    List<Movie> findSimiliarMovies(String movieID);
-
+    List<Movie> findMoviesReccomendedForUser(Long userID);
 }

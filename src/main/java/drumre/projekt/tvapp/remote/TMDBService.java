@@ -104,6 +104,23 @@ public class TMDBService {
        return movieDetails;
    }
 
+   public void fixActors() throws JsonProcessingException{
+        List<Movie> movies = this.movieRepository.findAll();
+        logger.info("Started fixing actors");
+        for(Movie m: movies){
+            if(m.getActors() != null && m.getActors().size()>1){
+               List<String> actors = new ArrayList<>();
+               for(String a: m.getActors()){
+                   String in = a.trim();
+                   actors.add(in);
+               }
+               m.setActors(actors);
+               this.movieRepository.save(m);
+            }
+        }
+        logger.info("Done fixing actors!");
+   }
+
 }
 
 @NoArgsConstructor

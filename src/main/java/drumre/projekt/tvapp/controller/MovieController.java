@@ -38,9 +38,9 @@ public class MovieController {
         this.movieService.likeMovie(userPrincipal.getId(), movieID);
     }
 
-    @GetMapping("/recommendation/{movieID}")
-    public List<Movie> getRecommendationsForMovie(@PathVariable String movieID){
-        return this.movieService.findSimiliarMovies(movieID);
+    @GetMapping("/recommendation/me")
+    public List<Movie> getRecommendationsForMovie(@CurrentUser UserPrincipal userPrincipal){
+        return this.movieService.findMoviesReccomendedForUser(userPrincipal.getId());
     }
 
 }
