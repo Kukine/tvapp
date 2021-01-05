@@ -71,7 +71,16 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> findMoviesReccomendedForUser(Long userID) {
+    public List<BasicMovieDTO> findMoviesByGenres(List<String> genres){
+        Query genreQuery = new Query();
+        genreQuery.addCriteria(Criteria.where("genres").all(genres));
+        List<Movie> movies= mongoTemplate.find(genreQuery, Movie.class);
+
+        return movieMapper.batchMovieToDTO(movies);
+    }
+
+    @Override
+    public List<BasicMovieDTO> findMoviesReccomendedForUser(Long userID) {
         Query likeQuery = new Query();
         likeQuery.addCriteria(Criteria.where("userID").is(userID));
         List<MovieLike> userLikes = mongoTemplate.find(likeQuery, MovieLike.class);
@@ -154,7 +163,7 @@ public class MovieServiceImpl implements MovieService {
         for(SimilarMovie o: output){
             logger.info(String.format("Score for movie %s: %d", o.movie.title, o.score));
         }
-        return output.stream().map(x -> x.movie).collect(Collectors.toList());
+        return movieMapper.batchMovieToDTO(output.stream().map(x -> x.movie).collect(Collectors.toList()));
     }
 }
 

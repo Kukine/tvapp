@@ -2,6 +2,7 @@ package drumre.projekt.tvapp.controller;
 
 import drumre.projekt.tvapp.controller.dto.BasicMovieDTO;
 import drumre.projekt.tvapp.controller.dto.MovieWithDetailsDTO;
+import drumre.projekt.tvapp.controller.dto.MoviesByGenreRequest;
 import drumre.projekt.tvapp.data.Movie;
 import drumre.projekt.tvapp.security.CurrentUser;
 import drumre.projekt.tvapp.security.UserPrincipal;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/movie")
@@ -39,8 +41,12 @@ public class MovieController {
     }
 
     @GetMapping("/recommendation/me")
-    public List<Movie> getRecommendationsForMovie(@CurrentUser UserPrincipal userPrincipal){
+    public List<BasicMovieDTO> getRecommendationsForMovie(@CurrentUser UserPrincipal userPrincipal){
         return this.movieService.findMoviesReccomendedForUser(userPrincipal.getId());
     }
 
+    @GetMapping("/genres")
+    public List<BasicMovieDTO> getMoviesByGenres(@RequestBody MoviesByGenreRequest req){
+        return this.movieService.findMoviesByGenres(req.getGenres()).stream().limit(30).collect(Collectors.toList());
+    }
 }
