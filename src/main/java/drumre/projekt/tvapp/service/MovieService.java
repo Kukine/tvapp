@@ -12,7 +12,13 @@ public interface MovieService {
 
     List<BasicMovieDTO> GetBatch(int size);
 
-    void likeMovie(Long userID, String movieID);
+    List<BasicMovieDTO> getSearchBatch(int size, String search);
+
+    boolean likeMovie(Long userID, String movieID);
+
+    boolean dislikeMovie(Long userID, String movieID);
+
+    boolean isLiked(Long userID, String movieID);
 
     List<BasicMovieDTO> findMoviesReccomendedForUser(Long userID);
 

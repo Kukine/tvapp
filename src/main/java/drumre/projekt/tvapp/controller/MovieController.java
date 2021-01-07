@@ -22,10 +22,16 @@ public class MovieController {
     MovieService movieService;
 
     @GetMapping("/top")
-    public List<BasicMovieDTO> getAllMovies(@RequestParam(required = false) Integer size){
+    public List<BasicMovieDTO> getAllMovies(@RequestParam(required = false) Integer size,
+                                            @RequestParam(required = false) String search){
         if (size == null){
             size = 20;
         }
+
+        if (search != null && !search.isBlank()) {
+            return movieService.getSearchBatch(size, search);
+        }
+
         return this.movieService.GetBatch(size);
     }
 
@@ -36,8 +42,18 @@ public class MovieController {
 
 
     @PostMapping("/{movieID}/like")
-    public void likeMovie(@CurrentUser UserPrincipal userPrincipal, @PathVariable String movieID){
-        this.movieService.likeMovie(userPrincipal.getId(), movieID);
+    public boolean likeMovie(@CurrentUser UserPrincipal userPrincipal, @PathVariable String movieID){
+        return this.movieService.likeMovie(userPrincipal.getId(), movieID);
+    }
+
+    @PostMapping("/{movieID}/dislike")
+    public boolean dislikeMovie(@CurrentUser UserPrincipal userPrincipal, @PathVariable String movieID){
+        return this.movieService.dislikeMovie(userPrincipal.getId(), movieID);
+    }
+
+    @GetMapping("/{movieID}/liked")
+    public boolean checkLikedMovie(@CurrentUser UserPrincipal userPrincipal, @PathVariable String movieID){
+        return this.movieService.isLiked(userPrincipal.getId(), movieID);
     }
 
     @GetMapping("/recommendation/me")

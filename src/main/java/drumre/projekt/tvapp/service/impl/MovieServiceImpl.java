@@ -1,32 +1,30 @@
 package drumre.projekt.tvapp.service.impl;
 
-import com.mongodb.client.MongoClient;
 import drumre.projekt.tvapp.controller.dto.BasicMovieDTO;
-import drumre.projekt.tvapp.controller.dto.MovieWithDetailsDTO;
 import drumre.projekt.tvapp.data.Movie;
 import drumre.projekt.tvapp.data.MovieLike;
-import drumre.projekt.tvapp.remote.TMDBService;
 import drumre.projekt.tvapp.repository.LikeRepository;
 import drumre.projekt.tvapp.repository.MovieRepository;
 import drumre.projekt.tvapp.service.MovieService;
 import drumre.projekt.tvapp.service.mapper.MovieMapper;
-import liquibase.pro.packaged.A;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,12 +60,36 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void likeMovie(Long userID, String movieID) {
-        MovieLike like = new MovieLike(userID, movieID, new Timestamp(System.currentTimeMillis()));
-        List<MovieLike> all = this.likeRepository.findAll(Example.of(like));
-        if(all.size() == 0){
+    public List<BasicMovieDTO> getSearchBatch(int size, String search) {
+        List<Movie> movies = movieRepository.findAllByTitleContainingIgnoreCase(search, Sort.by("voteAverage").descending()).stream().limit(size).collect(Collectors.toList());
+        return movieMapper.batchMovieToDTO(movies);
+
+    }
+
+    @Override
+    public boolean likeMovie(Long userID, String movieID) {
+        MovieLike like = new MovieLike(userID, movieID, LocalDateTime.now());
+        if (!likeRepository.existsByUserIDAndMovieID(userID, movieID)) {
             this.likeRepository.save(like);
+            return true;
         }
+
+        return false;
+    }
+
+    @Override
+    public boolean dislikeMovie(Long userID, String movieID) {
+        if (likeRepository.existsByUserIDAndMovieID(userID, movieID)) {
+            likeRepository.deleteByUserIDAndMovieID(userID, movieID);
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean isLiked(Long userID, String movieID) {
+        return likeRepository.existsByUserIDAndMovieID(userID, movieID);
     }
 
     @Override
