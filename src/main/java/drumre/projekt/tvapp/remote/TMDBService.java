@@ -1,5 +1,6 @@
 package drumre.projekt.tvapp.remote;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import drumre.projekt.tvapp.data.Genre;
@@ -31,6 +32,7 @@ public class TMDBService {
     private static String topRated = "movie/top_rated";
     private static String genres = "/genre/movie/list";
     private static String details = "movie";
+    private static String videos = "/videos";
     @Autowired
     private MovieRepository movieRepository;
 
@@ -39,6 +41,24 @@ public class TMDBService {
 
     @Autowired
     private GenreRepository genreRepository;
+
+
+    public String getYoutubeKey(String movieID) throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = baseUrl + "movie/" + movieID + videos + "?api_key=" + apiKey;
+        logger.info(url);
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        VideosResponse videos = new ObjectMapper().readValue(response.getBody(), VideosResponse.class);
+        if(videos != null && videos.results != null && videos.results.size() != 0 ){
+            for(VideoResult v : videos.results){
+                if(v.site.equals("YouTube") && v.type.equals("Trailer")){
+                    return v.key;
+                }
+            }
+        }
+        return null;
+    }
+
 
     public List<Movie> getMoviesFromTMDB() throws JsonProcessingException, InterruptedException {
         movieRepository.deleteAll();
@@ -136,4 +156,21 @@ class TMDBListResponse{
 @Data
 class GenreResponse{
     public List<Genre> genres;
+}
+
+@NoArgsConstructor
+@Data
+class VideosResponse{
+    Long id;
+    List<VideoResult> results;
+}
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
+@Data
+class VideoResult{
+    String id;
+    String key;
+    String site;
+    String type;
 }

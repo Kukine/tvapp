@@ -4,6 +4,7 @@ import drumre.projekt.tvapp.controller.dto.BasicMovieDTO;
 import drumre.projekt.tvapp.controller.dto.LikedMovieDTO;
 import drumre.projekt.tvapp.data.Movie;
 import drumre.projekt.tvapp.data.MovieLike;
+import drumre.projekt.tvapp.remote.TMDBService;
 import drumre.projekt.tvapp.repository.LikeRepository;
 import drumre.projekt.tvapp.repository.MovieRepository;
 import drumre.projekt.tvapp.service.MovieService;
@@ -40,19 +41,33 @@ public class MovieServiceImpl implements MovieService {
 
     LikeRepository likeRepository;
 
+    TMDBService tmdbService;
+
     MongoTemplate mongoTemplate;
 
     @Autowired
-    public MovieServiceImpl(MovieRepository movieRepository, MovieMapper movieMapper, LikeRepository likeRepository,  MongoTemplate mongoTemplate){
+    public MovieServiceImpl(MovieRepository movieRepository, MovieMapper movieMapper, LikeRepository likeRepository,  MongoTemplate mongoTemplate, TMDBService tmdbService){
         this.movieRepository = movieRepository;
         this.movieMapper = movieMapper;
         this.likeRepository = likeRepository;
         this.mongoTemplate  = mongoTemplate;
+        this.tmdbService = tmdbService;
     }
 
     @Override
     public Movie GetByID(String id) {
-        return movieRepository.findById(id).orElseThrow(()-> new RuntimeException("movie/repo: Movie not found"));
+        String youtubeKey = null;
+        try{
+            youtubeKey = this.tmdbService.getYoutubeKey(id);
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.info(String.format("No Youtube trailer found for trailer with ID: %s",id));
+        }
+        Movie movie = movieRepository.findById(id).orElseThrow(() -> new RuntimeException("movie/repo: Movie not found"));
+        if(youtubeKey != null){
+           movie.setYoutubeKey(youtubeKey);
+        }
+        return movie;
     }
 
     @Override

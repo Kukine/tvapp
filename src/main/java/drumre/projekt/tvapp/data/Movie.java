@@ -61,6 +61,8 @@ public class Movie {
     private List<Rating> ratings;
     private String rated;
 
+    private String youtubeKey;
+
     public void MapFromMovieDetails(MovieDetails details){
         this.budget = details.getBudget();
         this.homepage = details.getHomepage();
