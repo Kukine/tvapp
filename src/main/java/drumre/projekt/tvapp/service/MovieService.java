@@ -12,9 +12,9 @@ public interface MovieService {
 
     Movie GetByID(String id);
 
-    List<BasicMovieDTO> GetBatch(int size);
+    List<BasicMovieDTO> GetBatch(Integer size);
 
-    List<BasicMovieDTO> getSearchBatch(int size, String search);
+    List<BasicMovieDTO> getSearchBatch(Integer size, String search);
 
     boolean likeMovie(Long userID, String movieID);
 

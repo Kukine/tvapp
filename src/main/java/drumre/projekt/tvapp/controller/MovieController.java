@@ -27,10 +27,6 @@ public class MovieController {
     @GetMapping("/top")
     public List<BasicMovieDTO> getAllMovies(@RequestParam(required = false) Integer size,
                                             @RequestParam(required = false) String search){
-        if (size == null){
-            size = 20;
-        }
-
         if (search != null && !search.isBlank()) {
             return movieService.getSearchBatch(size, search);
         }
@@ -91,6 +87,6 @@ public class MovieController {
 
     @GetMapping("/popular/alltime")
     public List<BasicMovieDTO> getAllTimePopular(){
-        return  this.movieService.findPopularMovieByTime(LocalDateTime.MIN);
+        return  this.movieService.findPopularMovieByTime(LocalDateTime.of(1970, 1, 1, 0, 0, 0));
     }
 }

@@ -71,14 +71,25 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<BasicMovieDTO> GetBatch(int size) {
-        List<Movie> movies = movieRepository.findAll(Sort.by("voteAverage").descending()).stream().limit(size).collect(Collectors.toList());
+    public List<BasicMovieDTO> GetBatch(Integer size) {
+        List<Movie> movies = new ArrayList<>(movieRepository.findAll(Sort.by("voteAverage").descending()));
+
+        if (size != null) {
+            movies = movies.stream().limit(size).collect(Collectors.toList());
+        }
+
         return movieMapper.batchMovieToDTO(movies);
     }
 
     @Override
-    public List<BasicMovieDTO> getSearchBatch(int size, String search) {
-        List<Movie> movies = movieRepository.findAllByTitleContainingIgnoreCase(search, Sort.by("voteAverage").descending()).stream().limit(size).collect(Collectors.toList());
+    public List<BasicMovieDTO> getSearchBatch(Integer size, String search) {
+        List<Movie> movies = new ArrayList<>(
+            movieRepository.findAllByTitleContainingIgnoreCase(search, Sort.by("voteAverage").descending()));
+
+        if (size != null) {
+            movies = movies.stream().limit(size).collect(Collectors.toList());
+        }
+
         return movieMapper.batchMovieToDTO(movies);
 
     }
@@ -228,7 +239,7 @@ public class MovieServiceImpl implements MovieService {
         List<String> movieIDs = byLikeTimeAfter.stream().map(x -> x.movieID).collect(Collectors.toList());
         Map<String, Long> counts = movieIDs.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
         List<Movie> movies = this.movieRepository.findAllByIdIn(movieIDs);
-        movies.stream().sorted((a,b)-> counts.get(a) <= counts.get(b) ? 1 : -1).collect(Collectors.toList());
+        movies = movies.stream().sorted((o1, o2) -> counts.get(o2.id).compareTo(counts.get(o1.id))).collect(Collectors.toList());
         return movieMapper.batchMovieToDTO(movies);
     }
 
