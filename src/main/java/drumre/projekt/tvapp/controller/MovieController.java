@@ -1,6 +1,7 @@
 package drumre.projekt.tvapp.controller;
 
 import drumre.projekt.tvapp.controller.dto.BasicMovieDTO;
+import drumre.projekt.tvapp.controller.dto.LikedMovieDTO;
 import drumre.projekt.tvapp.controller.dto.MovieWithDetailsDTO;
 import drumre.projekt.tvapp.controller.dto.MoviesByGenreRequest;
 import drumre.projekt.tvapp.data.Movie;
@@ -11,6 +12,7 @@ import org.apache.catalina.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +42,11 @@ public class MovieController {
         return this.movieService.GetByID(movieID);
     }
 
+    @GetMapping("/liked")
+    public List<LikedMovieDTO> getLikedMovies(@CurrentUser UserPrincipal userPrincipal){
+        return this.movieService.findLikedMovies(userPrincipal.getId()).stream().sorted(
+            Comparator.comparing(LikedMovieDTO::getLikeTime).reversed()).collect(Collectors.toList());
+    }
 
     @PostMapping("/{movieID}/like")
     public boolean likeMovie(@CurrentUser UserPrincipal userPrincipal, @PathVariable String movieID){
@@ -61,7 +68,7 @@ public class MovieController {
         return this.movieService.findMoviesReccomendedForUser(userPrincipal.getId());
     }
 
-    @GetMapping("/genres")
+    @PostMapping("/genres")
     public List<BasicMovieDTO> getMoviesByGenres(@RequestBody MoviesByGenreRequest req){
         return this.movieService.findMoviesByGenres(req.getGenres()).stream().limit(30).collect(Collectors.toList());
     }

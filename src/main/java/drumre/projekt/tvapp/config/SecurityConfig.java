@@ -101,7 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/",
                         "/remote/**",
-                        "/movie/top",
+                        "/movie/**",
                         "/genres/**",
                         "/test",
                         "/error",

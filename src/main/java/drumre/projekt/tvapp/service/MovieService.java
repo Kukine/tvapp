@@ -1,6 +1,7 @@
 package drumre.projekt.tvapp.service;
 
 import drumre.projekt.tvapp.controller.dto.BasicMovieDTO;
+import drumre.projekt.tvapp.controller.dto.LikedMovieDTO;
 import drumre.projekt.tvapp.controller.dto.MovieWithDetailsDTO;
 import drumre.projekt.tvapp.data.Movie;
 
@@ -23,4 +24,7 @@ public interface MovieService {
     List<BasicMovieDTO> findMoviesReccomendedForUser(Long userID);
 
     List<BasicMovieDTO> findMoviesByGenres(List<String> genres);
+
+    List<LikedMovieDTO> findLikedMovies(Long userID);
+
 }

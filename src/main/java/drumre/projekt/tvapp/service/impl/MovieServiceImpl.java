@@ -1,6 +1,7 @@
 package drumre.projekt.tvapp.service.impl;
 
 import drumre.projekt.tvapp.controller.dto.BasicMovieDTO;
+import drumre.projekt.tvapp.controller.dto.LikedMovieDTO;
 import drumre.projekt.tvapp.data.Movie;
 import drumre.projekt.tvapp.data.MovieLike;
 import drumre.projekt.tvapp.repository.LikeRepository;
@@ -187,6 +188,24 @@ public class MovieServiceImpl implements MovieService {
         }
         return movieMapper.batchMovieToDTO(output.stream().map(x -> x.movie).collect(Collectors.toList()));
     }
+
+    @Override
+    public List<LikedMovieDTO> findLikedMovies(Long userID) {
+        List<MovieLike> likes = likeRepository.getByUserID(userID);
+
+        List<LikedMovieDTO> likedMovies = new ArrayList<>();
+        for (MovieLike like : likes) {
+            Movie movie = GetByID(like.getMovieID());
+
+            LikedMovieDTO likedMovieDTO = movieMapper.movieToLikedMovieDTO(movie);
+            likedMovieDTO.setLikeTime(like.getLikeTime());
+
+            likedMovies.add(likedMovieDTO);
+        }
+
+        return likedMovies;
+    }
+
 }
 
 @Data
