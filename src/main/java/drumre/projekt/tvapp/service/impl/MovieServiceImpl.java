@@ -19,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -206,6 +207,16 @@ public class MovieServiceImpl implements MovieService {
         return likedMovies;
     }
 
+    @Override
+    public List<BasicMovieDTO> findPopularMovieByTime(LocalDateTime time){
+        List<MovieLike> byLikeTimeAfter = this.likeRepository.getByLikeTimeAfter(time);
+        List<String> movieIDs = byLikeTimeAfter.stream().map(x -> x.movieID).collect(Collectors.toList());
+        Map<String, Long> counts = movieIDs.stream().collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+        List<Movie> movies = this.movieRepository.findAllByIdIn(movieIDs);
+        movies.stream().sorted((a,b)-> counts.get(a) <= counts.get(b) ? 1 : -1).collect(Collectors.toList());
+        return movieMapper.batchMovieToDTO(movies);
+    }
+
 }
 
 @Data
@@ -213,5 +224,4 @@ public class MovieServiceImpl implements MovieService {
 class SimilarMovie{
     int score;
     Movie movie;
-
 }

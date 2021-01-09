@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class MovieMapper {
@@ -55,6 +56,10 @@ public class MovieMapper {
         dto.setVoteAverage(movie.getVoteAverage());
         dto.setPosterPath(movie.getPosterPath());
         return dto;
+    }
+
+    public List<LikedMovieDTO> batchMovieToLikedMovieDTO(List<Movie> movies){
+        return movies.stream().map(this::movieToLikedMovieDTO).collect(Collectors.toList());
     }
 
     public MovieWithDetailsDTO movieWithDetailsDTO(Movie movie){

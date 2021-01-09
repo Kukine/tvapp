@@ -12,6 +12,7 @@ import org.apache.catalina.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -71,5 +72,25 @@ public class MovieController {
     @PostMapping("/genres")
     public List<BasicMovieDTO> getMoviesByGenres(@RequestBody MoviesByGenreRequest req){
         return this.movieService.findMoviesByGenres(req.getGenres()).stream().limit(30).collect(Collectors.toList());
+    }
+
+    @GetMapping("/popular/day")
+    public List<BasicMovieDTO> getDailyPopular(){
+        return  this.movieService.findPopularMovieByTime(LocalDateTime.now().minusDays(1));
+    }
+
+    @GetMapping("/popular/weekly")
+    public List<BasicMovieDTO> getWeeklyPopular(){
+        return  this.movieService.findPopularMovieByTime(LocalDateTime.now().minusDays(7));
+    }
+
+    @GetMapping("/popular/monthly")
+    public List<BasicMovieDTO> getMonthlyPopular(){
+        return  this.movieService.findPopularMovieByTime(LocalDateTime.now().minusDays(30));
+    }
+
+    @GetMapping("/popular/alltime")
+    public List<BasicMovieDTO> getAllTimePopular(){
+        return  this.movieService.findPopularMovieByTime(LocalDateTime.MIN);
     }
 }

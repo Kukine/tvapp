@@ -5,6 +5,7 @@ import drumre.projekt.tvapp.controller.dto.LikedMovieDTO;
 import drumre.projekt.tvapp.controller.dto.MovieWithDetailsDTO;
 import drumre.projekt.tvapp.data.Movie;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MovieService {
@@ -26,5 +27,7 @@ public interface MovieService {
     List<BasicMovieDTO> findMoviesByGenres(List<String> genres);
 
     List<LikedMovieDTO> findLikedMovies(Long userID);
+
+    List<BasicMovieDTO> findPopularMovieByTime(LocalDateTime time);
 
 }
